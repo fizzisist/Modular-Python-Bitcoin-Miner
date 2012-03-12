@@ -210,7 +210,7 @@ class X6500Worker(BaseWorker):
           elif data[0] == "pong": pass
           elif data[0] == "dying": raise Exception("Proxy died!")
           elif data[0] == "response": self.response_queue.put(data[1:])
-          elif data[0] == "started_up": self._notify_proxy_started_up(data[1:])
+          elif data[0] == "started_up": self._notify_proxy_started_up(data[1], data[2])
           elif data[0] == "nonce_found": self._notify_nonce_found(data[1:])
           elif data[0] == "temperature_read": self._notify_temperature_read(data[1:])
           else: raise Exception("Proxy sent unknown message: %s" % str(data))
@@ -299,7 +299,7 @@ class X6500FPGA(BaseWorker):
   def __init__(self, core, parent, fpga, bitstreamversion):
 
     # Let our superclass do some basic initialization
-    super(IcarusWorker, self).__init__(core, None)
+    super(X6500FPGA, self).__init__(core, None)
     self.parent = parent
     self.fpga = fpga
     self.firmware_rev = bitstreamversion
@@ -321,7 +321,7 @@ class X6500FPGA(BaseWorker):
   # Reset our state. Called both from the constructor and from self.start().
   def _reset(self):
     # Let our superclass handle everything that isn't specific to this worker module
-    super(X6500Worker, self)._reset()
+    super(X6500FPGA, self)._reset()
     self.stats.temperature = None
     self.stats.speed = None
 
